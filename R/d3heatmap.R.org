@@ -89,49 +89,49 @@ NULL
 #' 
 #' 
 d3heatmap <- function(x,
-                      
-                      ## dendrogram control
-                      Rowv = TRUE,
-                      Colv = if (symm) "Rowv" else TRUE,
-                      distfun = dist,
-                      hclustfun = hclust,
-                      dendrogram = c("both", "row", "column", "none"),
-                      reorderfun = function(d, w) reorder(d, w),
-                      
-                      k_row,
-                      k_col,
-                      
-                      symm = FALSE,
-                      revC,
-                      
-                      ## data scaling
-                      scale = c("none", "row", "column"),
-                      na.rm = TRUE,
-                      
-                      labRow = rownames(x), 
-                      labCol = colnames(x), 
-                      
-                      cexRow,
-                      cexCol,
-                      
-                      ## value formatting
-                      digits = 3L,
-                      cellnote,
-                      cellnote_scale = FALSE,
-                      
-                      ##TODO: decide later which names/conventions to keep
-                      theme = NULL,
-                      colors = "RdYlBu",
-                      width = NULL, height = NULL,
-                      xaxis_height = 80,
-                      yaxis_width = 120,
-                      xaxis_font_size = NULL,
-                      yaxis_font_size = NULL,
-                      brush_color = "#0000FF",
-                      show_grid = TRUE,
-                      anim_duration = 500,
-                      
-                      ...
+
+  ## dendrogram control
+  Rowv = TRUE,
+  Colv = if (symm) "Rowv" else TRUE,
+  distfun = dist,
+  hclustfun = hclust,
+  dendrogram = c("both", "row", "column", "none"),
+  reorderfun = function(d, w) reorder(d, w),
+  
+  k_row,
+  k_col,
+  
+  symm = FALSE,
+  revC,
+  
+  ## data scaling
+  scale = c("none", "row", "column"),
+  na.rm = TRUE,
+
+  labRow = rownames(x), 
+  labCol = colnames(x), 
+
+  cexRow,
+  cexCol,
+
+  ## value formatting
+  digits = 3L,
+  cellnote,
+  cellnote_scale = FALSE,
+  
+  ##TODO: decide later which names/conventions to keep
+  theme = NULL,
+  colors = "RdYlBu",
+  width = NULL, height = NULL,
+  xaxis_height = 80,
+  yaxis_width = 120,
+  xaxis_font_size = NULL,
+  yaxis_font_size = NULL,
+  brush_color = "#0000FF",
+  show_grid = TRUE,
+  anim_duration = 500,
+  
+  ...
 ) {
   
   ## x is a matrix!
@@ -146,13 +146,13 @@ d3heatmap <- function(x,
   ### TODO: debating if to include this or not:
   #   if(nr <= 1 || nc <= 1)
   #     stop("`x' must have at least 2 rows and 2 columns")
-  
-  
+
+
   ## Labels for Row/Column 
   ##======================
   rownames(x) <- labRow %||% paste(1:nrow(x))
   colnames(x) <- labCol %||% paste(1:ncol(x))
-  
+
   if(!missing(cexRow)) {
     if(is.numeric(cexRow)) {
       xaxis_font_size <- cexRow * 14
@@ -168,7 +168,7 @@ d3heatmap <- function(x,
     }
   }
   
-  
+
   ## Dendrograms for Row/Column 
   ##=======================
   dendrogram <- match.arg(dendrogram)
@@ -180,8 +180,8 @@ d3heatmap <- function(x,
   if (missing(Colv)) {
     Colv <- dendrogram %in% c("both", "column")
   }
-  
-  
+
+
   if (isTRUE(Rowv)) {
     Rowv <- rowMeans(x, na.rm = na.rm)
   }
@@ -220,7 +220,7 @@ d3heatmap <- function(x,
     colInd <- 1:nc
   }
   
-  
+    
   # TODO:  We may wish to change the defaults a bit in the future
   ## revC
   ##=======================
@@ -243,15 +243,15 @@ d3heatmap <- function(x,
   x <- x[rowInd, colInd]
   if (!missing(cellnote))
     cellnote <- cellnote[rowInd, colInd]
-  
+
   
   ## Dendrograms - Update the labels and change to dendToTree
   ##=======================
-  
+
   # color branches?
   #----------------
-  # Due to the internal working of dendextend, in order to use it we first need
-  # to populate the dendextend::dendextend_options() space:
+    # Due to the internal working of dendextend, in order to use it we first need
+      # to populate the dendextend::dendextend_options() space:
   if(!missing(k_row) | !missing(k_col)) dendextend::assign_dendextend_options()
   
   if(is.dendrogram(Rowv) & !missing(k_row)) {
@@ -263,7 +263,7 @@ d3heatmap <- function(x,
   
   rowDend <- if(is.dendrogram(Rowv)) dendToTree(Rowv) else NULL
   colDend <- if(is.dendrogram(Colv)) dendToTree(Colv) else NULL
-  
+
   
   ## Scale the data?
   ##====================
@@ -305,14 +305,14 @@ d3heatmap <- function(x,
   
   ## Final touches before htmlwidgets
   ##=======================
-  
+
   mtx <- list(data = as.character(t(cellnote)),
               dim = dim(x),
               rows = rownames(x),
               cols = colnames(x)
   )
   
-  
+    
   if (is.factor(x)) {
     colors <- scales::col_factor(colors, x, na.color = "transparent")
   } else {
@@ -325,7 +325,7 @@ d3heatmap <- function(x,
   }
   
   imgUri <- encodeAsPNG(t(x), colors)
-  
+
   options <- NULL
   
   options <- c(options, list(
@@ -337,7 +337,7 @@ d3heatmap <- function(x,
     show_grid = show_grid,
     anim_duration = anim_duration
   ))
-  
+
   if (is.null(rowDend)) {
     c(options, list(yclust_width = 0))
   }
@@ -346,7 +346,7 @@ d3heatmap <- function(x,
   }
   
   payload <- list(rows = rowDend, cols = colDend, matrix = mtx, image = imgUri,
-                  theme = theme, options = options)
+    theme = theme, options = options)
   
   # create widget
   htmlwidgets::createWidget(

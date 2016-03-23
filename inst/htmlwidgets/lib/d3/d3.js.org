@@ -6809,23 +6809,17 @@
     };
     return histogram;
   };
-    
-    
-    
   function d3_layout_histogramBinSturges(range, values) {
     return d3_layout_histogramBinFixed(range, Math.ceil(Math.log(values.length) / Math.LN2 + 1));
   }
-    
   function d3_layout_histogramBinFixed(range, n) {
     var x = -1, b = +range[0], m = (range[1] - b) / n, f = [];
     while (++x <= n) f[x] = m * x + b;
     return f;
   }
-    
   function d3_layout_histogramRange(values) {
     return [ d3.min(values), d3.max(values) ];
   }
-    
   d3.layout.pack = function() {
     var hierarchy = d3.layout.hierarchy().sort(d3_layout_packSort), padding = 0, size = [ 1, 1 ], radius;
     function pack(d, i) {
